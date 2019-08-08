@@ -13,4 +13,13 @@ export class UserService {
     async findOne(name: string): Promise<User | undefined> {
         return this.UserRepository.findOne({name})
     }
+    async signUp(name: string, password: string, email: string): Promise<User> {
+        let bcrypt = await require('bcrypt')
+        let user = new User()
+        user.name = name
+        user.email = email
+        let saltRounds: number = 15
+        user.password = await bcrypt.hashSync(password, saltRounds)
+        return this.UserRepository.save(user)
+    }
 }
